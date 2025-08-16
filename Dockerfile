@@ -1,4 +1,3 @@
-# -------- Base image (small + up-to-date) --------
 FROM node:22-alpine AS base
 WORKDIR /app
 ENV NODE_ENV=production \
@@ -10,14 +9,12 @@ RUN apk add --no-cache tini
 # Create non-root user
 RUN addgroup -S app && adduser -S -D -H -u 10001 app -G app
 
-# -------- Dependencies layer (leverage Docker cache) --------
 FROM base AS deps
 # Only copy manifest files to maximize layer cache hits
 COPY package.json package-lock.json* ./
 # Install production deps only; keep it deterministic & fast
 RUN npm ci --omit=dev
 
-# -------- Runtime image --------
 FROM base AS runtime
 # Copy installed node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
