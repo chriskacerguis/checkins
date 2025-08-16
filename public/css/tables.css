@@ -1,0 +1,60 @@
+/* Common table cell behavior */
+.table th,
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* Use fixed layout so declared widths are respected */
+#sessions-table,
+#checkins-table,
+#inactive-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* ---------- Upload page: Sessions widths via <colgroup> ---------- */
+#sessions-table col.id { width: 60px; }
+#sessions-table col.date { width: 140px; }
+#sessions-table col.start { width: 100px; }
+#sessions-table col.stop { width: 100px; }
+#sessions-table col.duration { width: 140px; }
+#sessions-table col.filename { width: 260px; }
+
+/* Align numeric cells for Sessions */
+#sessions-table td:nth-child(1),
+#sessions-table th:nth-child(1) { text-align: right; }  /* ID */
+#sessions-table td:nth-child(5),
+#sessions-table th:nth-child(5) { text-align: right; }  /* Duration */
+
+/* ---------- Upload page: Check-ins widths via <colgroup> ---------- */
+#checkins-table col.session { width: 80px; }
+#checkins-table col.rownum  { width: 60px; }
+#checkins-table col.callsign { width: 120px; }
+/* Give comment a solid fixed width so it stops resizing */
+#checkins-table col.comment { width: 480px; }
+#checkins-table col.tags { width: 240px; }
+
+/* Align numeric cells for Check-ins */
+#checkins-table td:nth-child(1),
+#checkins-table th:nth-child(1) { text-align: right; }  /* Session */
+#checkins-table td:nth-child(2),
+#checkins-table th:nth-child(2) { text-align: right; }  /* # */
+
+/* ---------- Inactive report (already fixed earlier; kept for completeness) ---------- */
+#inactive-table th[data-key="callsign"],
+#inactive-table td:nth-child(1) { width: 120px; }
+
+#inactive-table th[data-key="first_heard"],
+#inactive-table td:nth-child(2) { width: 140px; }
+
+#inactive-table th[data-key="last_heard"],
+#inactive-table td:nth-child(3) { width: 140px; }
+
+#inactive-table th[data-key="total_checkins"],
+#inactive-table td:nth-child(4) { width: 140px; text-align: right; }
+
+#inactive-table th[data-key="days_since"],
+#inactive-table td:nth-child(5) { width: 120px; text-align: right; }

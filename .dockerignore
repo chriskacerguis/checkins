@@ -1,0 +1,24 @@
+# Node/OS stuff
+node_modules
+npm-debug.log*
+yarn.lock
+.pnpm-store
+.DS_Store
+
+# Local env & certs (mount at runtime instead)
+.env
+*.pem
+*.key
+*.crt
+*.pfx
+
+# VCS & editor
+.git
+.gitignore
+.vscode
+.idea
+
+# Logs & tmp
+logs
+*.log
+tmp

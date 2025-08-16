@@ -1,0 +1,62 @@
+{{!-- Uses default layout "main" automatically --}}
+
+<h1 class="mb-4">Inactive Operators</h1>
+<p class="text-muted">
+  Shows callsigns we haven’t heard from in <span id="weeks-label">6</span> weeks or more.
+</p>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <form id="filter-form" class="row g-3 align-items-center">
+      <div class="col-auto">
+        <label for="weeks" class="col-form-label">Weeks inactive:</label>
+      </div>
+      <div class="col-auto">
+        <input id="weeks" type="number" min="1" max="520" value="6" class="form-control" />
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Apply</button>
+      </div>
+      <div class="col-auto ms-auto">
+        <a href="/" class="btn btn-link">← Back to Upload</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5">Results</h2>
+    <div id="meta" class="mb-2 small text-muted"></div>
+    <div class="table-responsive">
+      <table id="inactive-table" class="table table-striped table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" class="sortable" data-key="callsign" aria-sort="none" role="button" tabindex="0">
+              Callsign <span class="sort-indicator"></span>
+            </th>
+            <th scope="col" class="sortable" data-key="first_heard" aria-sort="none" role="button" tabindex="0">
+              First Heard <span class="sort-indicator"></span>
+            </th>
+            <th scope="col" class="sortable" data-key="last_heard" aria-sort="none" role="button" tabindex="0">
+              Last Heard <span class="sort-indicator"></span>
+            </th>
+            <th scope="col" class="sortable" data-key="total_checkins" aria-sort="none" role="button" tabindex="0">
+              Total Check-ins <span class="sort-indicator"></span>
+            </th>
+            <th scope="col" class="sortable" data-key="days_since" aria-sort="none" role="button" tabindex="0">
+              Days Since <span class="sort-indicator"></span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="5" class="text-center">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{{#section "scripts"}}
+  <script src="/inactive.js" defer></script>
+{{/section}}
