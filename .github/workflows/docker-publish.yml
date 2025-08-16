@@ -7,15 +7,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
-# Needed to push to GHCR with the built-in GITHUB_TOKEN
 permissions:
   contents: read
   packages: write
 
 env:
   REGISTRY: ghcr.io
-  # Image name == <registry>/<owner>/<repo>, lowercase per GHCR rules
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -25,6 +22,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Normalize image name
+        id: name
+        run: |
+          echo "IMAGE_NAME_LC=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
+          echo "Image will be: ${{ env.REGISTRY }}/$(echo ${GITHUB_REPOSITORY,,})"
 
       - name: Setup QEMU (for multi-arch builds)
         uses: docker/setup-qemu-action@v3
@@ -45,16 +48,15 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/\${{ env.IMAGE_NAME }}
-          # Generate smart tags:
-          # - On tags: use the tag (e.g. v1.2.3) and 'latest'
-          # - On main: tag with 'edge' and the short SHA
-          # - On PRs: tag with 'pr-<num>' and SHA (no push)
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}
           tags: |
+            # tag pushes: use version (v1.2.3) + latest
             type=ref,event=tag
             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            # main branch: edge + short SHA
             type=raw,value=edge,enable=${{ github.ref == 'refs/heads/main' }}
             type=sha,format=short
+            # pull requests: pr-<num>
             type=ref,event=pr
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
@@ -67,12 +69,10 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          # Multi-arch image (optional; comment out if you only need linux/amd64)
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # You can pass build args if your Dockerfile uses them
           build-args: |
             NODE_ENV=production
