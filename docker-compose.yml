@@ -1,7 +1,9 @@
-version: "3.9"
+volumes:
+  dbdata:
+
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: checkins
       POSTGRES_USER: checkins
@@ -17,21 +19,22 @@ services:
       retries: 10
 
   app:
-    build: .
+    image: ghcr.io/chriskacerguis/checkins:latest
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 3000
       PGHOST: db
       PGPORT: 5432
       PGDATABASE: checkins
       PGUSER: checkins
       PGPASSWORD: checkins
+      SSL_KEY_PATH: /app/ssl/key.pem
+      SSL_CERT_PATH: /app/ssl/cert.pem
+      FORCE_HTTPS: true
     ports:
       - "3000:3000"
     depends_on:
       - db
     volumes:
-      - ./:/app
-
-volumes:
-  dbdata:
+      - key.pem:/app/ssl/key.pem
+      - cert.pem:/app/ssl/cert.pem
